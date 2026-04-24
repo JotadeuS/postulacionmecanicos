@@ -25,9 +25,10 @@
         }
 
         body, html {
-            height: 100%;
+            min-height: 100%;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden; 
+            overflow-x: hidden; /* Evita scroll horizontal por si acaso */
+            overflow-y: auto;   /* Habilita el scroll vertical nativo del navegador */
         }
 
         .background-container {
@@ -46,10 +47,11 @@
 
         .main-wrapper {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 10px; 
+            /* Se agregan padding top/bottom generosos para asegurar que el logo y el botón tengan espacio al hacer scroll en móviles */
+            padding: 100px 15px 50px 15px; 
             background: rgba(0, 0, 0, 0.3);
         }
 
@@ -63,7 +65,7 @@
             border-radius: 15px;
             animation: animateRGB 12s linear infinite;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-            margin-top: 35px; 
+            margin: auto; /* Centrado inteligente: centra en PC, pero respeta el inicio en pantallas pequeñas */
         }
 
         @keyframes animateRGB {
