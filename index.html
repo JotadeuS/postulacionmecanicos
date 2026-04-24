@@ -112,6 +112,46 @@
             z-index: 20; 
         }
 
+        /* --- LOADER PROFESIONAL --- */
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .neon-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 255, 213, 0.1);
+            border-top: 3px solid #00ffd5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 213, 0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-container p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: pulseText 1.5s infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        /* -------------------------- */
+
         .form-group {
             margin-bottom: 15px; 
         }
@@ -444,8 +484,13 @@
             <div class="content-container">
                 <img src="logo.png" class="logo-header" alt="LSC Logo">
                 <h2 class="title-sub">Central de Reclutamiento</h2>
+
+                <div id="loader-container" class="loader-container">
+                    <div class="neon-spinner"></div>
+                    <p>Verificando estado...</p>
+                </div>
                 
-                <form id="appForm" novalidate>
+                <form id="appForm" class="hidden" novalidate>
                     <div class="form-group">
                         <label>1. Usuario de Discord <span class="required-tag">Obligatorio</span></label>
                         <input type="text" id="discord" placeholder="User#0000" required>
@@ -604,16 +649,15 @@
         // =========================================================================
         // 1. CONFIGURACIÓN DE FIREBASE (BASE DE DATOS ONLINE EN TIEMPO REAL)
         // =========================================================================
-        // REEMPLAZA ESTE BLOQUE CON LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE
         const firebaseConfig = {
-  apiKey: "AIzaSyD6UmtiSMQFHptMR3Y6YY5L93_M_mKwVOc",
-  authDomain: "postulacion-mecanicos.firebaseapp.com",
-  databaseURL: "https://postulacion-mecanicos-default-rtdb.firebaseio.com",
-  projectId: "postulacion-mecanicos",
-  storageBucket: "postulacion-mecanicos.firebasestorage.app",
-  messagingSenderId: "297275257265",
-  appId: "1:297275257265:web:4be1020b24a234eb89cd90"
-};
+            apiKey: "AIzaSyD6UmtiSMQFHptMR3Y6YY5L93_M_mKwVOc",
+            authDomain: "postulacion-mecanicos.firebaseapp.com",
+            databaseURL: "https://postulacion-mecanicos-default-rtdb.firebaseio.com",
+            projectId: "postulacion-mecanicos",
+            storageBucket: "postulacion-mecanicos.firebasestorage.app",
+            messagingSenderId: "297275257265",
+            appId: "1:297275257265:web:4be1020b24a234eb89cd90"
+        };
         
         // Inicializar Firebase
         firebase.initializeApp(firebaseConfig);
@@ -626,10 +670,12 @@
         const itemsPerPage = 4;
         let currentFormStatus = 'open';
         let todasLasPostulaciones = [];
+        let isStatusLoaded = false; // VARIABLE PARA SABER SI FIREBASE YA RESPONDIÓ
 
         // ESCUCHAR EL ESTADO DEL FORMULARIO EN TIEMPO REAL
         db.ref('estado_formulario').on('value', (snapshot) => {
             currentFormStatus = snapshot.val() || 'open';
+            isStatusLoaded = true; // Confirmamos que ya tenemos respuesta del servidor
             applyFormStatus();
         });
 
@@ -639,13 +685,11 @@
             todasLasPostulaciones = [];
             
             if (data) {
-                // Convertir el objeto de Firebase en un array
                 for (let key in data) {
                     todasLasPostulaciones.push({ id: key, ...data[key] });
                 }
             }
             
-            // Si el admin está logueado y viendo la lista, actualizar la vista al instante
             if (!document.getElementById('view-admin').classList.contains('hidden')) {
                 renderAdmin();
             }
@@ -657,6 +701,18 @@
         function applyFormStatus() {
             const form = document.getElementById('appForm');
             const closedMsg = document.getElementById('closedMessage');
+            const loader = document.getElementById('loader-container');
+
+            // Si Firebase todavía no responde, mostramos solo el loader
+            if (!isStatusLoaded) {
+                loader.classList.remove('hidden');
+                form.classList.add('hidden');
+                closedMsg.classList.add('hidden');
+                return;
+            }
+
+            // Si ya respondió, ocultamos el loader y mostramos la vista final
+            loader.classList.add('hidden');
 
             if (currentFormStatus === 'closed') {
                 form.classList.add('hidden');
@@ -669,7 +725,6 @@
         }
 
         function setFormStatus(status) {
-            // Guardar en la nube (esto disparará el evento 'value' para todos los usuarios)
             db.ref('estado_formulario').set(status);
 
             const title = document.getElementById('status-modal-title');
@@ -782,7 +837,6 @@
                 fecha: new Date().toLocaleString()
             };
             
-            // Subir a Firebase
             db.ref('postulaciones_lsc').push(nuevaPostulacion).then(() => {
                 showModal('modal-success');
                 this.reset();
@@ -839,7 +893,6 @@
         }
 
         function executeClearAll() {
-            // Borrar de Firebase
             db.ref('postulaciones_lsc').remove().then(() => {
                 currentPage = 1;
                 closeModals();
@@ -873,7 +926,6 @@
 
             const totalPages = Math.ceil(todasLasPostulaciones.length / itemsPerPage);
             
-            // Ajustar la página actual por si borramos el último registro de una página
             if (currentPage > totalPages) currentPage = totalPages;
             
             const start = (currentPage - 1) * itemsPerPage;
