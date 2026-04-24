@@ -27,8 +27,8 @@
         body, html {
             min-height: 100%;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden; /* Evita scroll horizontal por si acaso */
-            overflow-y: auto;   /* Habilita el scroll vertical nativo del navegador */
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .background-container {
@@ -50,7 +50,6 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            /* Se agregan padding top/bottom generosos para asegurar que el logo y el botón tengan espacio al hacer scroll en móviles */
             padding: 100px 15px 50px 15px; 
             background: rgba(0, 0, 0, 0.3);
         }
@@ -65,7 +64,7 @@
             border-radius: 15px;
             animation: animateRGB 12s linear infinite;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-            margin: auto; /* Centrado inteligente: centra en PC, pero respeta el inicio en pantallas pequeñas */
+            margin: auto;
         }
 
         @keyframes animateRGB {
@@ -93,6 +92,7 @@
             object-fit: contain; 
             transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
             cursor: pointer;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
         }
 
         .logo-header:hover {
@@ -102,19 +102,59 @@
 
         .title-sub {
             text-align: center;
-            font-size: 0.85rem; 
+            font-size: 1.3rem; /* Título agrandado */
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: var(--text-dim);
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
             margin-top: 10px; 
-            margin-bottom: 15px; 
-            border-bottom: 1px solid #333;
-            padding-bottom: 8px;
+            margin-bottom: 20px; 
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
             position: relative; 
             z-index: 20; 
         }
 
-        /* --- LOADER PROFESIONAL --- */
+        /* --- SELECCIÓN DE CARGOS --- */
+        .role-btn-meca {
+            border-color: #ff7300 !important;
+            color: #ff7300 !important;
+            padding: 15px !important;
+            font-size: 1rem !important;
+        }
+        .role-btn-meca:hover { background: #ff7300 !important; color: #000 !important; }
+
+        .role-btn-guard {
+            border-color: #0088ff !important;
+            color: #0088ff !important;
+            padding: 15px !important;
+            font-size: 1rem !important;
+        }
+        .role-btn-guard:hover { background: #0088ff !important; color: #000 !important; }
+
+        .selected-role-badge {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            border: 1px solid #333;
+        }
+
+        .role-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .tag-mecanico { background: rgba(255, 115, 0, 0.2); color: #ff7300; border: 1px solid #ff7300; }
+        .tag-guardia { background: rgba(0, 136, 255, 0.2); color: #0088ff; border: 1px solid #0088ff; }
+
+        /* --- LOADER --- */
         .loader-container {
             display: flex;
             flex-direction: column;
@@ -154,32 +194,10 @@
         }
         /* -------------------------- */
 
-        .form-group {
-            margin-bottom: 15px; 
-        }
-
-        label {
-            display: block;
-            font-size: 0.95rem;
-            margin-bottom: 2px;
-            font-weight: 600;
-            color: #efefef;
-        }
-
-        .required-tag {
-            color: #ff4444;
-            font-size: 0.75rem;
-            float: right;
-            font-weight: normal;
-        }
-
-        .helper {
-            font-size: 0.75rem; 
-            color: #aaa;
-            margin-bottom: 5px;
-            display: block;
-            line-height: 1.2;
-        }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.95rem; margin-bottom: 2px; font-weight: 600; color: #efefef; }
+        .required-tag { color: #ff4444; font-size: 0.75rem; float: right; font-weight: normal; }
+        .helper { font-size: 0.75rem; color: #aaa; margin-bottom: 5px; display: block; line-height: 1.2; }
 
         input, textarea {
             width: 100%;
@@ -193,23 +211,38 @@
             transition: border 0.3s, box-shadow 0.3s;
         }
 
-        .error-input {
-            border: 1px solid #ff4444 !important;
-            box-shadow: 0 0 8px rgba(255, 68, 68, 0.4) !important;
+        /* --- NUEVO ESTILO DE INPUTS PARA EL ADMIN --- */
+        .admin-input {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border: 1px solid #555 !important;
+            border-radius: 8px !important;
+            padding: 12px 15px !important;
+            color: #fff !important;
+            font-size: 0.95rem !important;
+            transition: all 0.3s ease !important;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5) !important;
+        }
+        
+        .admin-input:focus {
+            outline: none !important;
+            border-color: #00ffd5 !important;
+            box-shadow: 0 0 15px rgba(0, 255, 213, 0.4), inset 0 0 8px rgba(0, 255, 213, 0.2) !important;
+            transform: scale(1.02) !important;
+            background: rgba(10, 10, 10, 0.9) !important;
         }
 
-        .error-message {
-            color: #ff4444;
+        .admin-label {
+            color: #00ffd5;
+            text-transform: uppercase;
             font-size: 0.75rem;
-            font-weight: bold;
-            display: none;
-            margin-top: 5px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
         }
+        /* ------------------------------------------- */
 
-        .error-message.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in-out;
-        }
+        .error-input { border: 1px solid #ff4444 !important; box-shadow: 0 0 8px rgba(255, 68, 68, 0.4) !important; }
+        .error-message { color: #ff4444; font-size: 0.75rem; font-weight: bold; display: none; margin-top: 5px; }
+        .error-message.active { display: block; animation: fadeIn 0.3s ease-in-out; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-5px); }
@@ -231,20 +264,9 @@
             transition: all 0.3s;
         }
 
-        .btn-main:hover {
-            background: #00ffd5;
-            color: #000;
-        }
-
-        .btn-login {
-            background: #28a745;
-            color: white;
-            border: none;
-        }
-        .btn-login:hover {
-            background: #218838;
-            box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
-        }
+        .btn-main:hover { background: #00ffd5; color: #000; }
+        .btn-login { background: #28a745; color: white; border: none; }
+        .btn-login:hover { background: #218838; box-shadow: 0 0 15px rgba(40, 167, 69, 0.5); }
 
         .btn-volver {
             width: 100%;
@@ -258,85 +280,33 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        .btn-volver:hover {
-            background: #c82333;
-            box-shadow: 0 0 15px rgba(220, 53, 69, 0.5);
-        }
+        .btn-volver:hover { background: #c82333; box-shadow: 0 0 15px rgba(220, 53, 69, 0.5); }
 
-        .login-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-login-sm {
-            padding: 7px;
-            font-size: 0.75rem;
-            width: 60%;
-            margin-top: 0;
-        }
-
-        .admin-actions {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-sm {
-            padding: 8px;
-            font-size: 0.8rem;
-            margin-top: 0;
-            flex: 1; 
-        }
-
+        /* --- BOTÓN DE BORRAR MODIFICADO --- */
         .btn-danger {
-            border: none;
-            background: #ff4444;
-            color: white;
+            background: rgba(255, 51, 51, 0.1) !important; 
+            border: 1px solid #ff3333 !important; 
+            color: #ff3333 !important;
         }
-        .btn-dark {
-            border: none;
-            background: #111111;
-            color: white;
-            border: 1px solid #333;
+        .btn-danger:hover {
+            background: #ff3333 !important; 
+            color: #ffffff !important; 
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.6) !important;
         }
-        .btn-dark:hover {
-            background: #333;
-            color: white;
-        }
+        /* ---------------------------------- */
 
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 15px 0;
-        }
+        .login-actions { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 25px; }
+        .btn-login-sm { padding: 9px; font-size: 0.8rem; width: 80%; margin-top: 0; }
+        .admin-actions { display: flex; justify-content: space-between; gap: 10px; margin-top: 15px; }
+        .btn-sm { padding: 8px; font-size: 0.8rem; margin-top: 0; flex: 1; }
+        
+        .btn-dark { border: none; background: #111111; color: white; border: 1px solid #333; }
+        .btn-dark:hover { background: #333; color: white; }
 
-        .btn-page {
-            background: #222;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-page.active {
-            background: #00ffd5;
-            color: #000;
-            border-color: #00ffd5;
-        }
-
-        .scroll-area {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 5px;
-            margin-top: 10px;
-        }
-
+        .pagination-container { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
+        .btn-page { background: #222; border: 1px solid #444; color: #fff; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .btn-page.active { background: #00ffd5; color: #000; border-color: #00ffd5; }
+        .scroll-area { max-height: 400px; overflow-y: auto; padding-right: 5px; margin-top: 10px; }
         .hidden { display: none !important; }
 
         .entry-card {
@@ -348,15 +318,7 @@
             border-bottom: 1px solid rgba(0, 255, 213, 0.15); 
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
         }
-        
-        .entry-card p {
-            font-size: 0.85rem; 
-            margin-bottom: 6px; 
-            line-height: 1.4;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            white-space: pre-wrap;
-        }
+        .entry-card p { font-size: 0.85rem; margin-bottom: 6px; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
         .entry-card h4 { color: #00ffd5; margin-bottom: 10px; font-size: 1rem; border-bottom: 1px solid #333; padding-bottom: 5px; }
         .entry-card strong { color: #fff; }
 
@@ -375,7 +337,6 @@
             z-index: 100;
             transition: all 0.3s ease-in-out;    
         }
-
         .floating-admin-btn:hover {
             background: rgba(255, 115, 0, 0.4);  
             color: #ffffff;                      
@@ -384,66 +345,51 @@
             transform: scale(1.05);              
         }
 
-        .closed-message-container {
-            text-align: center;
-            padding: 30px 10px;
-            animation: fadeIn 0.5s ease-in-out;
+        .closed-message-container { text-align: center; padding: 30px 10px; animation: fadeIn 0.5s ease-in-out; }
+        .closed-icon { font-size: 3.5rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(255, 51, 51, 0.6)); }
+        .closed-text { color: #ff3333; font-size: 1.2rem; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; line-height: 1.4; }
+
+        /* --- TABS Y ESTADO COMPACTO ADMIN (CON BRILLO EXTRA) --- */
+        .admin-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
+        .btn-tab { 
+            flex: 1; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid #444; 
+            color: #bbb; 
+            padding: 10px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            text-transform: uppercase; 
+            font-size: 0.8rem; 
         }
-        .closed-icon {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 10px rgba(255, 51, 51, 0.6));
+        .btn-tab:hover { background: rgba(255, 255, 255, 0.1); }
+        
+        .btn-tab.active-meca { 
+            background: rgba(255, 115, 0, 0.2); 
+            border-color: #ff7300; 
+            color: #ffffff; 
+            box-shadow: 0 0 15px rgba(255, 115, 0, 0.5), inset 0 0 8px rgba(255, 115, 0, 0.3);
+            text-shadow: 0 0 5px #ff7300;
         }
-        .closed-text {
-            color: #ff3333;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            line-height: 1.4;
+        .btn-tab.active-guard { 
+            background: rgba(0, 136, 255, 0.2); 
+            border-color: #0088ff; 
+            color: #ffffff; 
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.5), inset 0 0 8px rgba(0, 136, 255, 0.3);
+            text-shadow: 0 0 5px #0088ff;
         }
 
-        .status-control-panel {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .status-title {
-            font-size: 0.8rem;
-            color: #ccc;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
+        .compact-status-bar { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.3); border: 1px solid #333; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; }
+        .status-label { font-size: 0.85rem; color: #ccc; font-weight: bold; text-transform: uppercase; }
+        .status-actions { display: flex; gap: 5px; }
+        .inline-btn { flex: none; width: auto; padding: 5px 12px; margin-top: 0; font-size: 0.75rem; }
 
         /* MODALES */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .mechanic-modal {
-            background: #1a1a1a;
-            padding: 25px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-            border: 1px solid #333;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-            color: #eee;
-        }
-
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px); z-index: 999; display: flex; justify-content: center; align-items: center; }
+        .mechanic-modal { background: #1a1a1a; padding: 25px; border-radius: 8px; width: 90%; max-width: 420px; text-align: center; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.9); color: #eee; }
+        
         .modal-warning { border-top: 12px solid transparent; border-image: repeating-linear-gradient(45deg, #ff9900, #ff9900 15px, #222 15px, #222 30px) 1; }
         .modal-info { border-top: 12px solid transparent; border-image: repeating-linear-gradient(45deg, #00ffd5, #00ffd5 15px, #222 15px, #222 30px) 1; }
         .modal-exit { border-top: 12px solid transparent; border-image: repeating-linear-gradient(45deg, #bbbbbb, #bbbbbb 15px, #222 15px, #222 30px) 1; }
@@ -460,18 +406,8 @@
         .mechanic-modal p { font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; color: #ccc; }
         .modal-buttons { display: flex; gap: 10px; }
         
-        .stats-badge {
-            background: rgba(0, 255, 213, 0.05);
-            border: 1px solid rgba(0, 255, 213, 0.2);
-            border-radius: 6px;
-            padding: 10px;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            color: #bbb;
-        }
+        .stats-badge { background: rgba(0, 255, 213, 0.05); border: 1px solid rgba(0, 255, 213, 0.2); border-radius: 6px; padding: 10px; text-align: center; margin-bottom: 15px; font-size: 0.9rem; color: #bbb; }
         .stats-badge span { color: #00ffd5; font-weight: bold; font-size: 1.1rem; margin-left: 5px; }
-
     </style>
 </head>
 <body>
@@ -482,17 +418,41 @@
 
     <div class="main-wrapper">
         
-        <div class="rgb-card" id="view-form">
+        <div class="rgb-card" id="view-selector">
             <div class="content-container">
                 <img src="logo.png" class="logo-header" alt="LSC Logo">
-                <h2 class="title-sub">Central de Reclutamiento</h2>
+                <h2 class="title-sub">Central de Postulaciones</h2>
+                
+                <p style="text-align: center; color: #ccc; font-size: 0.9rem; margin-bottom: 20px;">
+                    Selecciona el departamento al que deseas aplicar:
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <button class="btn-main role-btn-meca" onclick="chooseRole('Mecánico')">🔧 Mecánico</button>
+                    <button class="btn-main role-btn-guard" onclick="chooseRole('Guardia')">🛡️ Guardia de Seguridad</button>
+                    
+                    <hr style="border: 1px solid #333; margin: 5px 0;">
+                    
+                    <button class="btn-main btn-volver" style="margin-top: 0;" onclick="window.location.href='https://postulaciones.malvekesrp.cl'">⬅️ Volver a la Central</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="rgb-card hidden" id="view-form-container">
+            <div class="content-container">
+                <img src="logo.png" class="logo-header" alt="LSC Logo" onclick="resetToSelector()">
+                <h2 class="title-sub" id="form-main-title">Central de Reclutamiento</h2>
 
                 <div id="loader-container" class="loader-container">
                     <div class="neon-spinner"></div>
-                    <p>Verificando estado...</p>
+                    <p>Verificando estado del cargo...</p>
                 </div>
                 
                 <form id="appForm" class="hidden" novalidate>
+                    <div class="selected-role-badge">
+                        Postulando para: <span id="display-selected-role" style="color: #00ffd5; font-weight: bold; text-transform: uppercase;"></span>
+                    </div>
+
                     <div class="form-group">
                         <label>1. Usuario de Discord <span class="required-tag">Obligatorio</span></label>
                         <input type="text" id="discord" placeholder="User#0000" required>
@@ -527,18 +487,19 @@
 
                     <div class="form-group">
                         <label>6. Situación de Rol <span class="required-tag">Obligatorio</span></label>
-                        <span class="helper">En una situación que harías si un sujeto llega y tu como guardia le aplicas: /me revisas al cliente y le encuentras un arma de fuego en el bolsillo. Que accion/es realizarías como guardia.</span>
+                        <span class="helper">En una situación que harías si un sujeto llega y tu como guardia le aplicas: /me revisas al cliente y le encuentras un arma de fuego en el bolsillo. Que accion/es realizarías.</span>
                         <textarea id="rol" rows="3" required></textarea>
                         <span class="error-message">⚠️ Falta rellenar este campo</span>
                     </div>
 
                     <button type="submit" class="btn-main">Enviar Postulación</button>
+                    <button type="button" class="btn-main btn-dark" style="margin-top: 10px;" onclick="resetToSelector()">Volver a Selección</button>
                 </form>
 
                 <div id="closedMessage" class="closed-message-container hidden">
                     <div class="closed-icon">🚫</div>
-                    <p class="closed-text">Postulaciones cerradas<br>hasta nuevo aviso</p>
-                    <button class="btn-main btn-volver" style="width: 80%; margin: 0 auto; display: block;" onclick="window.location.href='https://postulaciones.malvekesrp.cl'">Regresar a Postulaciones</button>
+                    <p class="closed-text">Postulaciones cerradas<br>para este cargo</p>
+                    <button class="btn-main btn-volver" style="width: 80%; margin: 0 auto; display: block;" onclick="resetToSelector()">Volver a Selección</button>
                 </div>
 
             </div>
@@ -550,18 +511,18 @@
                 <h2 class="title-sub" style="color: #ff3333; font-size: 1.3rem;">Acceso Restringido</h2>
                 
                 <div class="form-group">
-                    <label>Usuario</label>
-                    <input type="text" id="userAdmin" placeholder="admin" autocomplete="off">
+                    <label class="admin-label">Usuario</label>
+                    <input type="text" id="userAdmin" class="admin-input" placeholder="Ingresa el usuario administrador" autocomplete="off">
                 </div>
 
                 <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="pinAdmin" placeholder="**********" autocomplete="off" onkeypress="handleLoginKey(event)">
+                    <label class="admin-label">Contraseña</label>
+                    <input type="password" id="pinAdmin" class="admin-input" placeholder="••••••••••••" autocomplete="off" onkeypress="handleLoginKey(event)">
                 </div>
 
                 <div class="login-actions">
-                    <button class="btn-main btn-login btn-login-sm" onclick="login()">Ingresar</button>
-                    <button class="btn-main btn-volver btn-login-sm" onclick="toggleView('view-form')">Volver al Formulario</button>
+                    <button class="btn-main btn-login btn-login-sm" onclick="login()">Ingresar al Panel</button>
+                    <button class="btn-main btn-volver btn-login-sm" onclick="resetToSelector()">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -571,23 +532,36 @@
                 <img src="logo.png" class="logo-header" alt="LSC Logo">
                 <h2 class="title-sub" style="color: #00ffd5; font-size: 1.3rem;">Panel de Control</h2>
                 
-                <div class="status-control-panel">
-                    <p class="status-title">Estado del Formulario</p>
-                    <div style="display: flex; gap: 10px;">
-                        <button id="btnStateOpen" class="btn-main btn-login btn-sm" onclick="setFormStatus('open')">✅ Abierto</button>
-                        <button id="btnStateClosed" class="btn-main btn-volver btn-sm" onclick="setFormStatus('closed')">🚫 Cerrado</button>
+                <div class="admin-tabs">
+                    <button id="tab-meca" class="btn-tab active-meca" onclick="switchAdminTab('Mecánico')">🔧 Mecánicos</button>
+                    <button id="tab-guard" class="btn-tab" onclick="switchAdminTab('Guardia')">🛡️ Guardias</button>
+                </div>
+
+                <div class="compact-status-bar" id="status-bar-meca">
+                    <span class="status-label">Postulación: Mecánicos</span>
+                    <div class="status-actions">
+                        <button id="btnMecaOpen" class="btn-main btn-login inline-btn" onclick="setRoleStatus('mecanico', 'open')">✅ Abiertas</button>
+                        <button id="btnMecaClosed" class="btn-main btn-volver inline-btn" onclick="setRoleStatus('mecanico', 'closed')">🚫 Cerradas</button>
+                    </div>
+                </div>
+
+                <div class="compact-status-bar hidden" id="status-bar-guard">
+                    <span class="status-label">Postulación: Guardias</span>
+                    <div class="status-actions">
+                        <button id="btnGuardOpen" class="btn-main btn-login inline-btn" onclick="setRoleStatus('guardia', 'open')">✅ Abiertas</button>
+                        <button id="btnGuardClosed" class="btn-main btn-volver inline-btn" onclick="setRoleStatus('guardia', 'closed')">🚫 Cerradas</button>
                     </div>
                 </div>
 
                 <div class="stats-badge" id="stats-badge">
-                    Total de Postulaciones recibidas: <span id="total-count">0</span>
+                    Postulaciones en esta categoría: <span id="total-count">0</span>
                 </div>
                 
                 <div id="entriesList" class="scroll-area"></div>
                 <div id="pagination" class="pagination-container"></div>
 
                 <div class="admin-actions">
-                    <button class="btn-main btn-danger btn-sm" onclick="tryClearAll()">Borrar Postulaciones</button>
+                    <button class="btn-main btn-danger btn-sm" onclick="tryClearAll()">Borrar Categoría</button>
                     <button class="btn-main btn-dark btn-sm" onclick="tryLogout()">Cerrar Sesión</button>
                 </div>
             </div>
@@ -599,7 +573,7 @@
         
         <div id="modal-delete" class="mechanic-modal modal-warning hidden">
             <h3>⚠️ Alerta del Taller ⚠️</h3>
-            <p>¿Estás seguro de enviar TODAS las postulaciones a la trituradora? <br><br><span style="color:#ff4444; font-weight:bold;">Esta acción no se puede deshacer.</span></p>
+            <p>¿Estás seguro de enviar TODAS las postulaciones de esta categoría a la trituradora? <br><br><span style="color:#ff4444; font-weight:bold;">Esta acción no se puede deshacer.</span></p>
             <div class="modal-buttons">
                 <button class="btn-main btn-dark btn-sm" onclick="closeModals()">Cancelar</button>
                 <button class="btn-main btn-danger btn-sm" onclick="executeClearAll()">Sí, borrar todo</button>
@@ -608,7 +582,7 @@
 
         <div id="modal-empty" class="mechanic-modal modal-info hidden">
             <h3>🔧 Bandeja Vacía 🔧</h3>
-            <p>Jefe, no hay ninguna postulación registrada en el sistema. No hay nada que borrar.</p>
+            <p>Jefe, no hay ninguna postulación registrada en esta categoría. No hay nada que borrar.</p>
             <button class="btn-main btn-login" style="width: 100%; margin-top:10px;" onclick="closeModals()">Entendido</button>
         </div>
 
@@ -649,7 +623,7 @@
 
     <script>
         // =========================================================================
-        // 1. CONFIGURACIÓN DE FIREBASE (BASE DE DATOS ONLINE EN TIEMPO REAL)
+        // 1. CONFIGURACIÓN DE FIREBASE
         // =========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyD6UmtiSMQFHptMR3Y6YY5L93_M_mKwVOc",
@@ -661,7 +635,6 @@
             appId: "1:297275257265:web:4be1020b24a234eb89cd90"
         };
         
-        // Inicializar Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
@@ -670,18 +643,32 @@
         // =========================================================================
         let currentPage = 1;
         const itemsPerPage = 4;
-        let currentFormStatus = 'open';
         let todasLasPostulaciones = [];
-        let isStatusLoaded = false; // VARIABLE PARA SABER SI FIREBASE YA RESPONDIÓ
+        
+        let statusMecanico = 'open';
+        let statusGuardia = 'open';
+        let isStatusMecaLoaded = false;
+        let isStatusGuardLoaded = false;
+        let selectedRoleUser = ''; 
+        let currentAdminTab = 'Mecánico';
 
-        // ESCUCHAR EL ESTADO DEL FORMULARIO EN TIEMPO REAL
-        db.ref('estado_formulario').on('value', (snapshot) => {
-            currentFormStatus = snapshot.val() || 'open';
-            isStatusLoaded = true; // Confirmamos que ya tenemos respuesta del servidor
-            applyFormStatus();
+        // ESCUCHAR EL ESTADO DE MECÁNICOS
+        db.ref('estado_mecanico').on('value', (snapshot) => {
+            statusMecanico = snapshot.val() || 'open';
+            isStatusMecaLoaded = true;
+            if (selectedRoleUser === 'Mecánico') checkFormVisibilityForUser();
+            updateAdminStateButtons();
         });
 
-        // ESCUCHAR POSTULACIONES EN TIEMPO REAL
+        // ESCUCHAR EL ESTADO DE GUARDIAS
+        db.ref('estado_guardia').on('value', (snapshot) => {
+            statusGuardia = snapshot.val() || 'open';
+            isStatusGuardLoaded = true;
+            if (selectedRoleUser === 'Guardia') checkFormVisibilityForUser();
+            updateAdminStateButtons();
+        });
+
+        // ESCUCHAR POSTULACIONES
         db.ref('postulaciones_lsc').on('value', (snapshot) => {
             const data = snapshot.val();
             todasLasPostulaciones = [];
@@ -698,85 +685,146 @@
         });
 
         // =========================================================================
-        // 3. FUNCIONES DE INTERFAZ Y VALIDACIÓN
+        // 3. FUNCIONES DE INTERFAZ Y FLUJO DE USUARIO
         // =========================================================================
-        function applyFormStatus() {
+        
+        function chooseRole(role) {
+            selectedRoleUser = role;
+            document.getElementById('display-selected-role').innerText = role;
+            toggleView('view-form-container');
+            checkFormVisibilityForUser();
+        }
+
+        function resetToSelector() {
+            selectedRoleUser = '';
+            document.getElementById('appForm').reset();
+            document.querySelectorAll('#appForm .error-input').forEach(el => el.classList.remove('error-input'));
+            document.querySelectorAll('#appForm .error-message.active').forEach(el => el.classList.remove('active'));
+            toggleView('view-selector');
+        }
+
+        function checkFormVisibilityForUser() {
+            if (!selectedRoleUser) return;
+
             const form = document.getElementById('appForm');
             const closedMsg = document.getElementById('closedMessage');
             const loader = document.getElementById('loader-container');
 
-            // Si Firebase todavía no responde, mostramos solo el loader
-            if (!isStatusLoaded) {
+            let isLoaded = (selectedRoleUser === 'Mecánico') ? isStatusMecaLoaded : isStatusGuardLoaded;
+            let currentStatus = (selectedRoleUser === 'Mecánico') ? statusMecanico : statusGuardia;
+
+            if (!isLoaded) {
                 loader.classList.remove('hidden');
                 form.classList.add('hidden');
                 closedMsg.classList.add('hidden');
                 return;
             }
 
-            // Si ya respondió, ocultamos el loader y mostramos la vista final
             loader.classList.add('hidden');
 
-            if (currentFormStatus === 'closed') {
+            if (currentStatus === 'closed') {
                 form.classList.add('hidden');
                 closedMsg.classList.remove('hidden');
             } else {
                 form.classList.remove('hidden');
                 closedMsg.classList.add('hidden');
             }
-            updateAdminStateButtons();
         }
 
-        function setFormStatus(status) {
-            db.ref('estado_formulario').set(status);
+        function setRoleStatus(role, status) {
+            let refName = (role === 'mecanico') ? 'estado_mecanico' : 'estado_guardia';
+            let roleName = (role === 'mecanico') ? 'MECÁNICOS' : 'GUARDIAS';
+
+            db.ref(refName).set(status);
 
             const title = document.getElementById('status-modal-title');
             const desc = document.getElementById('status-modal-desc');
             
             if(status === 'closed') {
-                title.innerText = '🚫 POSTULACIONES CERRADAS';
+                title.innerText = `🚫 POSTULACIÓN CERRADA`;
                 title.style.color = '#ff3333';
-                desc.innerText = 'El formulario está oculto para todos los usuarios en tiempo real.';
+                desc.innerText = `El formulario para ${roleName.toLowerCase()} se ha cerrado en tiempo real.`;
             } else {
-                title.innerText = '✅ POSTULACIONES ABIERTAS';
+                title.innerText = `✅ POSTULACIÓN ABIERTA`;
                 title.style.color = '#28a745';
-                desc.innerText = 'El formulario está activo y recibiendo postulaciones en tiempo real.';
+                desc.innerText = `El formulario para ${roleName.toLowerCase()} está activo.`;
             }
             showModal('modal-status-update');
         }
 
         function updateAdminStateButtons() {
-            const btnOpen = document.getElementById('btnStateOpen');
-            const btnClosed = document.getElementById('btnStateClosed');
-            
-            if (!btnOpen || !btnClosed) return;
+            const btnMecaOpen = document.getElementById('btnMecaOpen');
+            const btnMecaClosed = document.getElementById('btnMecaClosed');
+            if (btnMecaOpen && btnMecaClosed) {
+                if (statusMecanico === 'open') {
+                    btnMecaOpen.style.boxShadow = '0 0 10px rgba(40, 167, 69, 0.6)';
+                    btnMecaOpen.style.opacity = '1';
+                    btnMecaClosed.style.boxShadow = 'none';
+                    btnMecaClosed.style.opacity = '0.4';
+                } else {
+                    btnMecaClosed.style.boxShadow = '0 0 10px rgba(220, 53, 69, 0.6)';
+                    btnMecaClosed.style.opacity = '1';
+                    btnMecaOpen.style.boxShadow = 'none';
+                    btnMecaOpen.style.opacity = '0.4';
+                }
+            }
 
-            if (currentFormStatus === 'open') {
-                btnOpen.style.boxShadow = '0 0 15px rgba(40, 167, 69, 0.8)';
-                btnOpen.style.opacity = '1';
-                btnClosed.style.boxShadow = 'none';
-                btnClosed.style.opacity = '0.5';
-            } else {
-                btnClosed.style.boxShadow = '0 0 15px rgba(220, 53, 69, 0.8)';
-                btnClosed.style.opacity = '1';
-                btnOpen.style.boxShadow = 'none';
-                btnOpen.style.opacity = '0.5';
+            const btnGuardOpen = document.getElementById('btnGuardOpen');
+            const btnGuardClosed = document.getElementById('btnGuardClosed');
+            if (btnGuardOpen && btnGuardClosed) {
+                if (statusGuardia === 'open') {
+                    btnGuardOpen.style.boxShadow = '0 0 10px rgba(40, 167, 69, 0.6)';
+                    btnGuardOpen.style.opacity = '1';
+                    btnGuardClosed.style.boxShadow = 'none';
+                    btnGuardClosed.style.opacity = '0.4';
+                } else {
+                    btnGuardClosed.style.boxShadow = '0 0 10px rgba(220, 53, 69, 0.6)';
+                    btnGuardClosed.style.opacity = '1';
+                    btnGuardOpen.style.boxShadow = 'none';
+                    btnGuardOpen.style.opacity = '0.4';
+                }
             }
         }
 
+        function switchAdminTab(role) {
+            currentAdminTab = role;
+            currentPage = 1;
+
+            const tabMeca = document.getElementById('tab-meca');
+            const tabGuard = document.getElementById('tab-guard');
+            const barMeca = document.getElementById('status-bar-meca');
+            const barGuard = document.getElementById('status-bar-guard');
+
+            if (role === 'Mecánico') {
+                tabMeca.classList.add('active-meca');
+                tabGuard.classList.remove('active-guard');
+                barMeca.classList.remove('hidden');
+                barGuard.classList.add('hidden');
+            } else {
+                tabGuard.classList.add('active-guard');
+                tabMeca.classList.remove('active-meca');
+                barGuard.classList.remove('hidden');
+                barMeca.classList.add('hidden');
+            }
+
+            renderAdmin();
+        }
+
         function toggleView(viewId) {
-            document.getElementById('view-form').classList.add('hidden');
+            document.getElementById('view-selector').classList.add('hidden');
+            document.getElementById('view-form-container').classList.add('hidden');
             document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-admin').classList.add('hidden');
+            
             document.getElementById(viewId).classList.remove('hidden');
 
             const btnFloat = document.getElementById('btnAdmin');
-            btnFloat.style.display = (viewId === 'view-form') ? 'block' : 'none';
-
-            if (viewId === 'view-form') {
-                document.querySelectorAll('#appForm .error-input').forEach(el => el.classList.remove('error-input'));
-                document.querySelectorAll('#appForm .error-message.active').forEach(el => el.classList.remove('active'));
-                applyFormStatus();
+            if(viewId === 'view-admin' || viewId === 'view-login') {
+                btnFloat.style.display = 'none';
+            } else {
+                btnFloat.style.display = 'block';
             }
+
             if (viewId === 'view-admin') {
                 updateAdminStateButtons();
                 renderAdmin();
@@ -798,7 +846,6 @@
             });
         });
 
-        // ENVÍO DE FORMULARIO A LA BASE DE DATOS ONLINE
         document.getElementById('appForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -830,6 +877,7 @@
             if (!isValid) return;
 
             const nuevaPostulacion = {
+                cargo: selectedRoleUser,
                 discord: document.getElementById('discord').value,
                 edad: document.getElementById('edad').value,
                 nombre: document.getElementById('nombre').value,
@@ -859,7 +907,7 @@
 
             if (u === 'admin' && p === 'adminmecas') {
                 currentPage = 1;
-                renderAdmin();
+                switchAdminTab('Mecánico'); 
                 toggleView('view-admin');
                 document.getElementById('userAdmin').value = '';
                 document.getElementById('pinAdmin').value = '';
@@ -887,7 +935,12 @@
         }
 
         function tryClearAll() {
-            if(todasLasPostulaciones.length === 0) {
+            const currentTabItems = todasLasPostulaciones.filter(item => {
+                const itemCargo = item.cargo || 'Mecánico';
+                return itemCargo === currentAdminTab;
+            });
+
+            if(currentTabItems.length === 0) {
                 showModal('modal-empty'); 
             } else {
                 showModal('modal-delete'); 
@@ -895,10 +948,25 @@
         }
 
         function executeClearAll() {
-            db.ref('postulaciones_lsc').remove().then(() => {
-                currentPage = 1;
-                closeModals();
+            let updates = {};
+            todasLasPostulaciones.forEach(item => {
+                const itemCargo = item.cargo || 'Mecánico';
+                if (itemCargo === currentAdminTab) {
+                    updates[item.id] = null; 
+                }
             });
+
+            if (Object.keys(updates).length > 0) {
+                db.ref('postulaciones_lsc').update(updates).then(() => {
+                    currentPage = 1;
+                    closeModals();
+                }).catch((error) => {
+                    console.error("Error al borrar datos: ", error);
+                    closeModals();
+                });
+            } else {
+                closeModals();
+            }
         }
 
         function tryLogout() {
@@ -907,10 +975,9 @@
 
         function executeLogout() {
             closeModals();
-            toggleView('view-form');
+            resetToSelector();
         }
 
-        // RENDERIZAR DATOS DESDE LA NUBE
         function renderAdmin() {
             const container = document.getElementById('entriesList');
             const pagContainer = document.getElementById('pagination');
@@ -919,25 +986,34 @@
             container.innerHTML = '';
             pagContainer.innerHTML = '';
 
-            contadorHTML.innerText = todasLasPostulaciones.length;
+            const filteredItems = todasLasPostulaciones.filter(item => {
+                const itemCargo = item.cargo || 'Mecánico';
+                return itemCargo === currentAdminTab;
+            });
 
-            if (todasLasPostulaciones.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#555; margin-top:20px;">No hay registros.</p>';
+            contadorHTML.innerText = filteredItems.length;
+
+            if (filteredItems.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#555; margin-top:20px;">No hay registros de ${currentAdminTab.toLowerCase()}s.</p>`;
                 return;
             }
 
-            const totalPages = Math.ceil(todasLasPostulaciones.length / itemsPerPage);
-            
-            if (currentPage > totalPages) currentPage = totalPages;
+            const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+            if (currentPage > totalPages) currentPage = totalPages || 1;
             
             const start = (currentPage - 1) * itemsPerPage;
-            const currentItems = todasLasPostulaciones.slice(start, start + itemsPerPage);
+            const currentItems = filteredItems.slice(start, start + itemsPerPage);
 
             currentItems.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'entry-card';
+                
+                let badgeClass = item.cargo === 'Mecánico' || !item.cargo ? 'tag-mecanico' : 'tag-guardia';
+                let icon = item.cargo === 'Mecánico' || !item.cargo ? '🔧' : '🛡️';
+
                 card.innerHTML = `
                     <h4>#${start + index + 1} - ${item.nombre}</h4>
+                    <span class="role-tag ${badgeClass}">${icon} Postula a: ${item.cargo || 'Mecánico'}</span>
                     <p><strong>Discord:</strong> ${item.discord}</p>
                     <p><strong>Edad:</strong> ${item.edad}</p>
                     <p><strong>Experiencia:</strong> ${item.exp}</p>
