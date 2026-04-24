@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los Santos Customs | Central de Postulaciones</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        /* Estilos Base y Reset */
+        :root {
+            --neon-border: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            --bg-overlay: rgba(10, 10, 10, 0.85);
+            --input-bg: rgba(0, 0, 0, 0.7);
+            --text-main: #ffffff;
+            --text-dim: #bbbbbb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; 
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('fondo.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px);
+            transform: scale(1.1); 
+            z-index: -1;
+        }
+
+        .main-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px; 
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .rgb-card {
+            position: relative;
+            width: 100%;
+            max-width: 550px; 
+            padding: 3px;
+            background: var(--neon-border);
+            background-size: 400%;
+            border-radius: 15px;
+            animation: animateRGB 12s linear infinite;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            margin-top: 35px; 
+        }
+
+        @keyframes animateRGB {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .content-container {
+            background: var(--bg-overlay);
+            border-radius: 12px;
+            padding: 40px 25px 15px; 
+            position: relative;
+            color: var(--text-main);
+        }
+
+        .logo-header {
+            position: absolute;
+            top: -85px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px; 
+            filter: drop-shadow(0 0 10px rgba(162, 0, 255, 0.5));
+            z-index: 10;
+            object-fit: contain; 
+            transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .logo-header:hover {
+            transform: translateX(-50%) scale(1.04);
+            filter: drop-shadow(0 0 12px rgba(162, 0, 255, 0.65));
+        }
+
+        .title-sub {
+            text-align: center;
+            font-size: 0.85rem; 
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            margin-top: 10px; 
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+            position: relative; 
+            z-index: 20; 
+        }
+
+        .form-group {
+            margin-bottom: 15px; 
+        }
+
+        label {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+            font-weight: 600;
+            color: #efefef;
+        }
+
+        .required-tag {
+            color: #ff4444;
+            font-size: 0.75rem;
+            float: right;
+            font-weight: normal;
+        }
+
+        .helper {
+            font-size: 0.75rem; 
+            color: #aaa;
+            margin-bottom: 5px;
+            display: block;
+            line-height: 1.2;
+        }
+
+        input, textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 8px; 
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .error-input {
+            border: 1px solid #ff4444 !important;
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.4) !important;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: none;
+            margin-top: 5px;
+        }
+
+        .error-message.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 10px; 
+            margin-top: 5px;
+            background: transparent;
+            border: 2px solid #00ffd5;
+            color: #00ffd5;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-main:hover {
+            background: #00ffd5;
+            color: #000;
+        }
+
+        .btn-login {
+            background: #28a745;
+            color: white;
+            border: none;
+        }
+        .btn-login:hover {
+            background: #218838;
+            box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
+        }
+
+        .btn-volver {
+            width: 100%;
+            background: #dc3545; 
+            border: none;
+            color: #ffffff;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-volver:hover {
+            background: #c82333;
+            box-shadow: 0 0 15px rgba(220, 53, 69, 0.5);
+        }
+
+        .login-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-login-sm {
+            padding: 7px;
+            font-size: 0.75rem;
+            width: 60%;
+            margin-top: 0;
+        }
+
+        .admin-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-sm {
+            padding: 8px;
+            font-size: 0.8rem;
+            margin-top: 0;
+            flex: 1; 
+        }
+
+        .btn-danger {
+            border: none;
+            background: #ff4444;
+            color: white;
+        }
+        .btn-dark {
+            border: none;
+            background: #111111;
+            color: white;
+            border: 1px solid #333;
+        }
+        .btn-dark:hover {
+            background: #333;
+            color: white;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .btn-page {
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-page.active {
+            background: #00ffd5;
+            color: #000;
+            border-color: #00ffd5;
+        }
+
+        .scroll-area {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-top: 10px;
+        }
+
+        .hidden { display: none !important; }
+
+        .entry-card {
+            background: rgba(255, 255, 255, 0.08); 
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px; 
+            border-left: 5px solid #00ffd5;
+            border-bottom: 1px solid rgba(0, 255, 213, 0.15); 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+        }
+        
+        .entry-card p {
+            font-size: 0.85rem; 
+            margin-bottom: 6px; 
+            line-height: 1.4;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        .entry-card h4 { color: #00ffd5; margin-bottom: 10px; font-size: 1rem; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .entry-card strong { color: #fff; }
+
+        .floating-admin-btn {
+            position: fixed;
+            top: 20px; 
+            right: 20px;
+            background: rgba(255, 115, 0, 0.15); 
+            border: 1px solid #ff7300;           
+            color: #ff7300;                      
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease-in-out;    
+        }
+
+        .floating-admin-btn:hover {
+            background: rgba(255, 115, 0, 0.4);  
+            color: #ffffff;                      
+            border-color: #ffaa00;               
+            box-shadow: 0 0 15px rgba(255, 115, 0, 0.8), inset 0 0 8px rgba(255, 115, 0, 0.5); 
+            transform: scale(1.05);              
+        }
+
+        .closed-message-container {
+            text-align: center;
+            padding: 30px 10px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .closed-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(255, 51, 51, 0.6));
+        }
+        .closed-text {
+            color: #ff3333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.4;
+        }
+
+        .status-control-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .status-title {
+            font-size: 0.8rem;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        /* MODALES */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mechanic-modal {
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            border: 1px solid #333;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+            color: #eee;
+        }
+
+        .modal-warning { border-top: 12px solid transparent; border-image: repeating-linear-gradient(45deg, #ff9900, #ff9900 15px, #222 15px, #222 30px) 1; }
+        .modal-info { border-top: 12px solid transparent; border-image: repeating-linear-gradient(45deg, #00ffd5, #00ffd5 15px, #222 15px, #222 30px) 1; }
+        .modal-exit { border-top: 12px solid transparent; border-image: repeating-linear-gradient(45deg, #bbbbbb, #bbbbbb 15px, #222 15px, #222 30px) 1; }
+        .modal-success { border-top: 12px solid transparent; border-image: repeating-linear-gradient(45deg, #28a745, #28a745 15px, #222 15px, #222 30px) 1; }
+        .modal-error { border-top: 12px solid transparent; border-image: repeating-linear-gradient(45deg, #ff3333, #ff3333 15px, #222 15px, #222 30px) 1; }
+
+        .mechanic-modal h3 { margin-bottom: 15px; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px; }
+        .modal-warning h3 { color: #ff9900; }
+        .modal-info h3 { color: #00ffd5; }
+        .modal-exit h3 { color: #ffffff; }
+        .modal-success h3 { color: #28a745; }
+        .modal-error h3 { color: #ff3333; }
+
+        .mechanic-modal p { font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; color: #ccc; }
+        .modal-buttons { display: flex; gap: 10px; }
+        
+        .stats-badge {
+            background: rgba(0, 255, 213, 0.05);
+            border: 1px solid rgba(0, 255, 213, 0.2);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+        .stats-badge span { color: #00ffd5; font-weight: bold; font-size: 1.1rem; margin-left: 5px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="background-container"></div>
+
+    <div class="floating-admin-btn" id="btnAdmin" onclick="toggleView('view-login')">⚙️ Acceso Admin</div>
+
+    <div class="main-wrapper">
+        
+        <div class="rgb-card" id="view-form">
+            <div class="content-container">
+                <img src="logo.png" class="logo-header" alt="LSC Logo">
+                <h2 class="title-sub">Central de Reclutamiento</h2>
+                
+                <form id="appForm" novalidate>
+                    <div class="form-group">
+                        <label>1. Usuario de Discord <span class="required-tag">Obligatorio</span></label>
+                        <input type="text" id="discord" placeholder="User#0000" required>
+                        <span class="error-message">⚠️ Falta rellenar este campo</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>2. Edad OOC <span class="required-tag">Obligatorio</span></label>
+                        <input type="text" id="edad" placeholder="Ej: 21" required maxlength="2" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <span class="error-message">⚠️ Falta rellenar este campo</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>3. Nombre IC <span class="required-tag">Obligatorio</span></label>
+                        <input type="text" id="nombre" placeholder="Nombre y Apellido" required>
+                        <span class="error-message">⚠️ Falta rellenar este campo</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>4. Experiencia Previa <span class="required-tag">Obligatorio</span></label>
+                        <span class="helper">¿Has trabajado en mecánica o seguridad anteriormente? Si es así, ¿dónde?</span>
+                        <textarea id="exp" rows="2" required></textarea>
+                        <span class="error-message">⚠️ Falta rellenar este campo</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>5. ¿Por qué tú? <span class="required-tag">Obligatorio</span></label>
+                        <span class="helper">¿Qué aportarías a Los Santos Customs que otros no tengan?</span>
+                        <textarea id="why" rows="3" required></textarea>
+                        <span class="error-message">⚠️ Falta rellenar este campo</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>6. Situación de Rol <span class="required-tag">Obligatorio</span></label>
+                        <span class="helper">En una situación que harías si un sujeto llega y tu como guardia le aplicas: /me revisas al cliente y le encuentras un arma de fuego en el bolsillo. Que accion/es realizarías como guardia.</span>
+                        <textarea id="rol" rows="3" required></textarea>
+                        <span class="error-message">⚠️ Falta rellenar este campo</span>
+                    </div>
+
+                    <button type="submit" class="btn-main">Enviar Postulación</button>
+                </form>
+
+                <div id="closedMessage" class="closed-message-container hidden">
+                    <div class="closed-icon">🚫</div>
+                    <p class="closed-text">Postulaciones cerradas<br>hasta nuevo aviso</p>
+                    <button class="btn-main btn-volver" style="width: 80%; margin: 0 auto; display: block;" onclick="window.location.href='https://postulaciones.malvekesrp.cl'">Regresar a Postulaciones</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="rgb-card hidden" id="view-login">
+            <div class="content-container">
+                <img src="logo.png" class="logo-header" alt="LSC Logo">
+                <h2 class="title-sub" style="color: #ff3333; font-size: 1.3rem;">Acceso Restringido</h2>
+                
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <input type="text" id="userAdmin" placeholder="admin" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="pinAdmin" placeholder="**********" autocomplete="off" onkeypress="handleLoginKey(event)">
+                </div>
+
+                <div class="login-actions">
+                    <button class="btn-main btn-login btn-login-sm" onclick="login()">Ingresar</button>
+                    <button class="btn-main btn-volver btn-login-sm" onclick="toggleView('view-form')">Volver al Formulario</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="rgb-card hidden" id="view-admin">
+            <div class="content-container">
+                <img src="logo.png" class="logo-header" alt="LSC Logo">
+                <h2 class="title-sub" style="color: #00ffd5; font-size: 1.3rem;">Panel de Control</h2>
+                
+                <div class="status-control-panel">
+                    <p class="status-title">Estado del Formulario</p>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btnStateOpen" class="btn-main btn-login btn-sm" onclick="setFormStatus('open')">✅ Abierto</button>
+                        <button id="btnStateClosed" class="btn-main btn-volver btn-sm" onclick="setFormStatus('closed')">🚫 Cerrado</button>
+                    </div>
+                </div>
+
+                <div class="stats-badge" id="stats-badge">
+                    Total de Postulaciones recibidas: <span id="total-count">0</span>
+                </div>
+                
+                <div id="entriesList" class="scroll-area"></div>
+                <div id="pagination" class="pagination-container"></div>
+
+                <div class="admin-actions">
+                    <button class="btn-main btn-danger btn-sm" onclick="tryClearAll()">Borrar Postulaciones</button>
+                    <button class="btn-main btn-dark btn-sm" onclick="tryLogout()">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+        
+        <div id="modal-delete" class="mechanic-modal modal-warning hidden">
+            <h3>⚠️ Alerta del Taller ⚠️</h3>
+            <p>¿Estás seguro de enviar TODAS las postulaciones a la trituradora? <br><br><span style="color:#ff4444; font-weight:bold;">Esta acción no se puede deshacer.</span></p>
+            <div class="modal-buttons">
+                <button class="btn-main btn-dark btn-sm" onclick="closeModals()">Cancelar</button>
+                <button class="btn-main btn-danger btn-sm" onclick="executeClearAll()">Sí, borrar todo</button>
+            </div>
+        </div>
+
+        <div id="modal-empty" class="mechanic-modal modal-info hidden">
+            <h3>🔧 Bandeja Vacía 🔧</h3>
+            <p>Jefe, no hay ninguna postulación registrada en el sistema. No hay nada que borrar.</p>
+            <button class="btn-main btn-login" style="width: 100%; margin-top:10px;" onclick="closeModals()">Entendido</button>
+        </div>
+
+        <div id="modal-logout" class="mechanic-modal modal-exit hidden">
+            <h3>🚪 Cerrar Taller 🚪</h3>
+            <p>¿Seguro que quieres cerrar sesión y volver a la entrada principal?</p>
+            <div class="modal-buttons">
+                <button class="btn-main btn-dark btn-sm" onclick="closeModals()">Me quedo</button>
+                <button class="btn-main btn-volver btn-sm" style="margin-top:0;" onclick="executeLogout()">Sí, salir</button>
+            </div>
+        </div>
+
+        <div id="modal-success" class="mechanic-modal modal-success hidden">
+            <h3>✅ Postulación Enviada ✅</h3>
+            <p>Tus datos han ingresado correctamente a nuestro sistema. Si cumples con el perfil, te contactaremos por Discord.</p>
+            <button class="btn-main btn-login" style="width: 100%; margin-top:10px;" onclick="closeModals()">Entendido</button>
+        </div>
+
+        <div id="modal-login-empty" class="mechanic-modal modal-warning hidden">
+            <h3>⚠️ Datos Requeridos ⚠️</h3>
+            <p>Debes ingresar tanto el usuario como la contraseña para poder acceder al sistema.</p>
+            <button class="btn-main btn-volver" style="width: 100%; margin-top:10px;" onclick="closeModals()">Cerrar</button>
+        </div>
+
+        <div id="modal-login-error" class="mechanic-modal modal-error hidden">
+            <h3>❌ Acceso Denegado ❌</h3>
+            <p>Las credenciales ingresadas son incorrectas. Verifica tus datos e intenta nuevamente.</p>
+            <button class="btn-main btn-volver" style="width: 100%; margin-top:10px;" onclick="closeModals()">Cerrar</button>
+        </div>
+
+        <div id="modal-status-update" class="mechanic-modal modal-info hidden">
+            <h3 id="status-modal-title">🔄 ESTADO</h3>
+            <p id="status-modal-desc">El formulario ha cambiado de estado.</p>
+            <button class="btn-main btn-login" style="width: 100%; margin-top:10px;" onclick="closeModals()">Entendido</button>
+        </div>
+
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. CONFIGURACIÓN DE FIREBASE (BASE DE DATOS ONLINE EN TIEMPO REAL)
+        // =========================================================================
+        // REEMPLAZA ESTE BLOQUE CON LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE
+        const firebaseConfig = {
+  apiKey: "AIzaSyD6UmtiSMQFHptMR3Y6YY5L93_M_mKwVOc",
+  authDomain: "postulacion-mecanicos.firebaseapp.com",
+  databaseURL: "https://postulacion-mecanicos-default-rtdb.firebaseio.com",
+  projectId: "postulacion-mecanicos",
+  storageBucket: "postulacion-mecanicos.firebasestorage.app",
+  messagingSenderId: "297275257265",
+  appId: "1:297275257265:web:4be1020b24a234eb89cd90"
+};
+        
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // =========================================================================
+        // 2. LÓGICA DE LA APLICACIÓN Y VARIABLES GLOBALES
+        // =========================================================================
+        let currentPage = 1;
+        const itemsPerPage = 4;
+        let currentFormStatus = 'open';
+        let todasLasPostulaciones = [];
+
+        // ESCUCHAR EL ESTADO DEL FORMULARIO EN TIEMPO REAL
+        db.ref('estado_formulario').on('value', (snapshot) => {
+            currentFormStatus = snapshot.val() || 'open';
+            applyFormStatus();
+        });
+
+        // ESCUCHAR POSTULACIONES EN TIEMPO REAL
+        db.ref('postulaciones_lsc').on('value', (snapshot) => {
+            const data = snapshot.val();
+            todasLasPostulaciones = [];
+            
+            if (data) {
+                // Convertir el objeto de Firebase en un array
+                for (let key in data) {
+                    todasLasPostulaciones.push({ id: key, ...data[key] });
+                }
+            }
+            
+            // Si el admin está logueado y viendo la lista, actualizar la vista al instante
+            if (!document.getElementById('view-admin').classList.contains('hidden')) {
+                renderAdmin();
+            }
+        });
+
+        // =========================================================================
+        // 3. FUNCIONES DE INTERFAZ Y VALIDACIÓN
+        // =========================================================================
+        function applyFormStatus() {
+            const form = document.getElementById('appForm');
+            const closedMsg = document.getElementById('closedMessage');
+
+            if (currentFormStatus === 'closed') {
+                form.classList.add('hidden');
+                closedMsg.classList.remove('hidden');
+            } else {
+                form.classList.remove('hidden');
+                closedMsg.classList.add('hidden');
+            }
+            updateAdminStateButtons();
+        }
+
+        function setFormStatus(status) {
+            // Guardar en la nube (esto disparará el evento 'value' para todos los usuarios)
+            db.ref('estado_formulario').set(status);
+
+            const title = document.getElementById('status-modal-title');
+            const desc = document.getElementById('status-modal-desc');
+            
+            if(status === 'closed') {
+                title.innerText = '🚫 POSTULACIONES CERRADAS';
+                title.style.color = '#ff3333';
+                desc.innerText = 'El formulario está oculto para todos los usuarios en tiempo real.';
+            } else {
+                title.innerText = '✅ POSTULACIONES ABIERTAS';
+                title.style.color = '#28a745';
+                desc.innerText = 'El formulario está activo y recibiendo postulaciones en tiempo real.';
+            }
+            showModal('modal-status-update');
+        }
+
+        function updateAdminStateButtons() {
+            const btnOpen = document.getElementById('btnStateOpen');
+            const btnClosed = document.getElementById('btnStateClosed');
+            
+            if (!btnOpen || !btnClosed) return;
+
+            if (currentFormStatus === 'open') {
+                btnOpen.style.boxShadow = '0 0 15px rgba(40, 167, 69, 0.8)';
+                btnOpen.style.opacity = '1';
+                btnClosed.style.boxShadow = 'none';
+                btnClosed.style.opacity = '0.5';
+            } else {
+                btnClosed.style.boxShadow = '0 0 15px rgba(220, 53, 69, 0.8)';
+                btnClosed.style.opacity = '1';
+                btnOpen.style.boxShadow = 'none';
+                btnOpen.style.opacity = '0.5';
+            }
+        }
+
+        function toggleView(viewId) {
+            document.getElementById('view-form').classList.add('hidden');
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
+
+            const btnFloat = document.getElementById('btnAdmin');
+            btnFloat.style.display = (viewId === 'view-form') ? 'block' : 'none';
+
+            if (viewId === 'view-form') {
+                document.querySelectorAll('#appForm .error-input').forEach(el => el.classList.remove('error-input'));
+                document.querySelectorAll('#appForm .error-message.active').forEach(el => el.classList.remove('active'));
+                applyFormStatus();
+            }
+            if (viewId === 'view-admin') {
+                updateAdminStateButtons();
+                renderAdmin();
+            }
+        }
+
+        function handleLoginKey(e) {
+            if (e.key === "Enter") login();
+        }
+
+        document.querySelectorAll('#appForm input[required], #appForm textarea[required]').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('error-input');
+                const errorSpan = this.nextElementSibling;
+                if(errorSpan && errorSpan.classList.contains('error-message')) {
+                    errorSpan.classList.remove('active');
+                    errorSpan.innerText = '⚠️ Falta rellenar este campo';
+                }
+            });
+        });
+
+        // ENVÍO DE FORMULARIO A LA BASE DE DATOS ONLINE
+        document.getElementById('appForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            const inputs = this.querySelectorAll('input[required], textarea[required]');
+            
+            inputs.forEach(input => {
+                const errorSpan = input.nextElementSibling;
+                const val = input.value.trim();
+                
+                if (!val) {
+                    isValid = false;
+                    input.classList.add('error-input');
+                    if(errorSpan && errorSpan.classList.contains('error-message')) {
+                        errorSpan.innerText = '⚠️ Falta rellenar este campo';
+                        errorSpan.classList.add('active');
+                    }
+                } 
+                else if (input.id === 'edad' && val.length !== 2) {
+                    isValid = false;
+                    input.classList.add('error-input');
+                    if(errorSpan && errorSpan.classList.contains('error-message')) {
+                        errorSpan.innerText = '⚠️ Debes ingresar 2 dígitos obligatoriamente';
+                        errorSpan.classList.add('active');
+                    }
+                }
+            });
+
+            if (!isValid) return;
+
+            const nuevaPostulacion = {
+                discord: document.getElementById('discord').value,
+                edad: document.getElementById('edad').value,
+                nombre: document.getElementById('nombre').value,
+                exp: document.getElementById('exp').value,
+                why: document.getElementById('why').value,
+                rol: document.getElementById('rol').value,
+                fecha: new Date().toLocaleString()
+            };
+            
+            // Subir a Firebase
+            db.ref('postulaciones_lsc').push(nuevaPostulacion).then(() => {
+                showModal('modal-success');
+                this.reset();
+            }).catch((error) => {
+                console.error("Error al guardar: ", error);
+                alert("Hubo un error de conexión al servidor.");
+            });
+        });
+
+        function login() {
+            const u = document.getElementById('userAdmin').value.trim();
+            const p = document.getElementById('pinAdmin').value.trim();
+
+            if (u === '' || p === '') {
+                showModal('modal-login-empty');
+                return;
+            }
+
+            if (u === 'admin' && p === 'adminmecas') {
+                currentPage = 1;
+                renderAdmin();
+                toggleView('view-admin');
+                document.getElementById('userAdmin').value = '';
+                document.getElementById('pinAdmin').value = '';
+            } else {
+                showModal('modal-login-error');
+            }
+        }
+
+        function showModal(id) {
+            document.getElementById('modal-overlay').classList.remove('hidden');
+            
+            document.getElementById('modal-delete').classList.add('hidden');
+            document.getElementById('modal-empty').classList.add('hidden');
+            document.getElementById('modal-logout').classList.add('hidden');
+            document.getElementById('modal-success').classList.add('hidden');
+            document.getElementById('modal-login-empty').classList.add('hidden');
+            document.getElementById('modal-login-error').classList.add('hidden');
+            document.getElementById('modal-status-update').classList.add('hidden');
+            
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModals() {
+            document.getElementById('modal-overlay').classList.add('hidden');
+        }
+
+        function tryClearAll() {
+            if(todasLasPostulaciones.length === 0) {
+                showModal('modal-empty'); 
+            } else {
+                showModal('modal-delete'); 
+            }
+        }
+
+        function executeClearAll() {
+            // Borrar de Firebase
+            db.ref('postulaciones_lsc').remove().then(() => {
+                currentPage = 1;
+                closeModals();
+            });
+        }
+
+        function tryLogout() {
+            showModal('modal-logout'); 
+        }
+
+        function executeLogout() {
+            closeModals();
+            toggleView('view-form');
+        }
+
+        // RENDERIZAR DATOS DESDE LA NUBE
+        function renderAdmin() {
+            const container = document.getElementById('entriesList');
+            const pagContainer = document.getElementById('pagination');
+            const contadorHTML = document.getElementById('total-count');
+            
+            container.innerHTML = '';
+            pagContainer.innerHTML = '';
+
+            contadorHTML.innerText = todasLasPostulaciones.length;
+
+            if (todasLasPostulaciones.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#555; margin-top:20px;">No hay registros.</p>';
+                return;
+            }
+
+            const totalPages = Math.ceil(todasLasPostulaciones.length / itemsPerPage);
+            
+            // Ajustar la página actual por si borramos el último registro de una página
+            if (currentPage > totalPages) currentPage = totalPages;
+            
+            const start = (currentPage - 1) * itemsPerPage;
+            const currentItems = todasLasPostulaciones.slice(start, start + itemsPerPage);
+
+            currentItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'entry-card';
+                card.innerHTML = `
+                    <h4>#${start + index + 1} - ${item.nombre}</h4>
+                    <p><strong>Discord:</strong> ${item.discord}</p>
+                    <p><strong>Edad:</strong> ${item.edad}</p>
+                    <p><strong>Experiencia:</strong> ${item.exp}</p>
+                    <p><strong>Por qué tú:</strong> ${item.why}</p>
+                    <p><strong>Situación de Rol:</strong> ${item.rol}</p>
+                    <small style="color:#666; font-size: 0.75rem; display: block; margin-top: 10px;">Enviado: ${item.fecha}</small>
+                `;
+                container.appendChild(card);
+            });
+
+            if (totalPages > 1) {
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.innerText = i;
+                    btn.className = 'btn-page' + (i === currentPage ? ' active' : '');
+                    btn.onclick = () => { currentPage = i; renderAdmin(); };
+                    pagContainer.appendChild(btn);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
